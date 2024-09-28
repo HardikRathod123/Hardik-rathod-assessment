@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom/client';
-import LinkedInScript from './linkedin-script.tsx';
-import "../../assets/main.css"
+import LinkedInScript from '../../components/linkedin-script.tsx';
+import "@/assets/main.css"
+import { LinkedInProvider } from '@/components/contexts/linkedin-context.tsx';
 
 export default defineContentScript({
     matches: ['*://*/*'],
@@ -13,7 +14,9 @@ export default defineContentScript({
                 console.log(container);
                 const root = ReactDOM.createRoot(container);
                 root.render(
-                        <LinkedInScript/>
+                    <LinkedInProvider>
+                        <LinkedInScript />
+                        </LinkedInProvider>
                 );
                 return root;
             },
