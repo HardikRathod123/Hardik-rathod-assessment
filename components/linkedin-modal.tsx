@@ -5,11 +5,8 @@ import Conversation from "./conversation";
 const GENERATED_TEXT =
   "Thank you for the opportunity! If you have any more questions or if there's anything else I can help you with, feel free to ask.";
 
-interface LinkedInModalProps {
-  handleInsertText: (text: string) => void;
-}
-const LinkedInModal: React.FC<LinkedInModalProps> = ({ handleInsertText }) => {
-  const { state, dispatch } = useLinkedInContext();
+const LinkedInModal: React.FC = () => {
+  const { state, dispatch, handleInsertText } = useLinkedInContext();
   const [prompt, setPrompt] = useState("");
   const handleOutsideClick = () => {
     dispatch({ type: "SET_SHOW_MODAL", payload: false });
