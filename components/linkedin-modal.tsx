@@ -7,18 +7,19 @@ const GENERATED_TEXT =
 
 const LinkedInModal = () => {
   const { state, dispatch } = useLinkedInContext();
-
+  const [prompt, setPrompt] = useState("");
   const handleOutsideClick = () => {
     dispatch({ type: "SET_SHOW_MODAL", payload: false });
   };
 
   const handleGenerateText = () => {
-    if (state.prompt === "" || state.prompt === undefined) {
+    if (prompt === "") {
       alert("Please enter a prompt to generate the post");
       return;
     }
+    dispatch({ type: "SET_PROMPT", payload: prompt });
     dispatch({ type: "SET_GENERATED_TEXT", payload: GENERATED_TEXT });
-    console.log("object", state.prompt);
+    setPrompt("");
   };
 
   const handleInsertText = () => {
@@ -48,19 +49,18 @@ const LinkedInModal = () => {
           className="flex flex-col items-end gap-4 bg-white rounded-2xl p-4 w-1/3 shadow-lg"
           onClick={(e) => e.stopPropagation()}
         >
-          <Conversation />
+          {state.prompt && state.generatedText && <Conversation />}
           <textarea
             id="message"
             rows={1}
             className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Your prompt"
-            onChange={(e) =>
-              dispatch({ type: "SET_PROMPT", payload: e.target.value })
-            }
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
           ></textarea>
           <div className="flex gap-6">
             <button
-              className="place flex gap-2 px-3 py-1 rounded-lg items-center justify-between border-2 border-gray-500"
+              className="place flex gap-2 px-3 py-1 rounded-lg items-center justify-between border-2 border-gray-500 transition-transform duration-300 ease-out transform active:scale-95 "
               onClick={handleInsertText}
               disabled={!state.generatedText}
             >
@@ -81,9 +81,9 @@ const LinkedInModal = () => {
             </button>
             {!state.generatedText ? (
               <button
-                className="place flex gap-2 px-3 py-1 rounded-lg items-center justify-between bg-blue-500"
+                className="place flex gap-2 px-3 py-1 rounded-lg items-center justify-between bg-blue-500 transition-transform duration-300 ease-out transform  active:scale-95"
                 onClick={handleGenerateText}
-                disabled={!state.prompt}
+                disabled={prompt === ""}
               >
                 <svg
                   width="19"
@@ -101,9 +101,9 @@ const LinkedInModal = () => {
               </button>
             ) : (
               <button
-                className="place flex gap-2 px-3 py-1 rounded-lg items-center justify-between bg-blue-500"
+                className="place flex gap-2 px-3 py-1 rounded-lg items-center justify-between bg-blue-500 transition-transform duration-300 ease-out transform active:scale-95"
                 onClick={handleGenerateText}
-                disabled={!state.prompt}
+                disabled={prompt === ""}
               >
                 <svg
                   width="12"

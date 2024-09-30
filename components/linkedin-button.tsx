@@ -20,7 +20,7 @@ const LinkedInButton = () => {
     >
       <button
         onClick={handleClick}
-        className="w-8 h-8 bg-white rounded-[200px] shadow-md flex items-center justify-center transition-transform duration-300 ease-out transform hover:scale-110 active:scale-95"
+        className="w-8 h-8 bg-white rounded-[200px] shadow-md flex items-center justify-center transition-transform duration-300 ease-out transform active:scale-95"
       >
         <svg
           width="16"
