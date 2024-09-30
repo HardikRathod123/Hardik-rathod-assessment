@@ -4,7 +4,7 @@ import LinkedInButton from "./linkedin-button";
 import LinkedInModal from "./linkedin-modal";
 
 const LinkedInScript = () => {
-  const { dispatch } = useLinkedInContext();
+  const { state, dispatch } = useLinkedInContext();
 
   const updateIconPosition = useCallback(
     (target: HTMLElement) => {
@@ -35,6 +35,37 @@ const LinkedInScript = () => {
     }
   };
 
+  const handleInsertText = (text: string) => {
+    dispatch({ type: "SET_SHOW_MODAL", payload: false });
+    const replyText = text;
+
+    const messageElement: HTMLElement | null = document.querySelector(
+      ".msg-form__contenteditable"
+    );
+
+    if (messageElement) {
+      const pTag = messageElement.querySelector("p");
+      if (pTag) {
+        pTag.innerHTML = replyText;
+      } else {
+        const paragraph: HTMLParagraphElement = document.createElement("p");
+        paragraph.textContent = replyText;
+        messageElement.textContent = "";
+        messageElement.appendChild(paragraph);
+      }
+      const label: HTMLElement | null = document.querySelector(
+        ".msg-form__placeholder"
+      );
+      label?.classList.remove("msg-form__placeholder");
+
+      const sendButton: HTMLButtonElement | null = document.querySelector(
+        ".msg-form__send-button"
+      );
+      if (sendButton) {
+        sendButton.disabled = false;
+      }
+    }
+  };
   useEffect(() => {
     document.addEventListener("focus", handleFocus, true);
     document.addEventListener("blur", handleFocusOut, true);
@@ -48,7 +79,7 @@ const LinkedInScript = () => {
   return (
     <>
       <LinkedInButton />
-      <LinkedInModal />
+      <LinkedInModal handleInsertText={handleInsertText} />
     </>
   );
 };
