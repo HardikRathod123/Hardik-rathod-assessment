@@ -1,6 +1,7 @@
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { useLinkedInContext } from "./contexts/linkedin-context";
 import LinkedInButton from "./linkedin-button";
+import LinkedInModal from "./linkedin-modal";
 
 const LinkedInScript = () => {
   const { dispatch } = useLinkedInContext();
@@ -19,34 +20,35 @@ const LinkedInScript = () => {
     [dispatch]
   );
 
-  const handleFocus = useCallback(
-    (event: FocusEvent) => {
-      const target = event.target as HTMLElement;
-      if (target.classList.contains("msg-form__contenteditable")) {
-        dispatch({ type: "SET_SHOW_ICON", payload: true });
-        updateIconPosition(target);
-      }
-    },
-    [dispatch, updateIconPosition]
-  );
+  const handleFocus = (event: FocusEvent) => {
+    const target = event.target as HTMLElement;
+    if (target.matches(".msg-form__contenteditable")) {
+      dispatch({ type: "SET_SHOW_ICON", payload: true });
+      updateIconPosition(target);
+    }
+  };
 
-  const handleBlur = useCallback(() => {
-    dispatch({ type: "SET_SHOW_ICON", payload: false });
-  }, [dispatch]);
+  const handleFocusOut = (event: FocusEvent) => {
+    const target = event.relatedTarget as HTMLElement;
+    if (!target || target.matches(".AI-icon")) {
+      dispatch({ type: "SET_SHOW_ICON", payload: false });
+    }
+  };
 
   useEffect(() => {
     document.addEventListener("focus", handleFocus, true);
-    document.addEventListener("blur", handleBlur, true);
+    document.addEventListener("blur", handleFocusOut, true);
 
     return () => {
       document.removeEventListener("focus", handleFocus, true);
-      document.removeEventListener("blur", handleBlur, true);
+      document.removeEventListener("blur", handleFocusOut, true);
     };
-  }, [handleFocus, handleBlur]);
+  }, [handleFocus, handleFocusOut]);
 
   return (
     <>
       <LinkedInButton />
+      <LinkedInModal />
     </>
   );
 };
